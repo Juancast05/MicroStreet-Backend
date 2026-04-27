@@ -2,6 +2,7 @@ package com.example.microstreet.controller;
 import com.example.microstreet.model.Partido;
 import com.example.microstreet.repository.PartidoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -24,4 +25,20 @@ public class PartidoController {
     public Partido crearPartido(@RequestBody Partido partido) {
         return partidoRepository.save(partido);
     }
+
+    @PutMapping("/{id}/unirse")
+    public ResponseEntity<Partido> unirseAlPartido(@PathVariable Long id) {
+        return partidoRepository.findById(id).map(partido -> {
+            // Validamos que todavía queden cupos
+            if (partido.getCuposDisponibles() > 0) {
+                partido.setCuposDisponibles(partido.getCuposDisponibles() - 1);
+                Partido actualizado = partidoRepository.save(partido);
+                return ResponseEntity.ok(actualizado);
+            } else {
+                // Si no hay cupos, mandamos un error 400
+                return ResponseEntity.badRequest().<Partido>build();
+            }
+        }).orElse(ResponseEntity.notFound().build());
+    }
 }
+
