@@ -16,8 +16,7 @@ public class Usuario {
     private String email;
     private String password;
     private String codigoVerificacion;
-    private boolean verificado = false;
-
-
+    @Column(nullable = false)
+    private boolean verificado;
     }
 
