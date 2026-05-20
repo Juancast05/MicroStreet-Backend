@@ -10,7 +10,7 @@ public class Partido {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    private String creadorCorreo;
     private String titulo;
     private String lugar;
     private LocalDateTime fechaHora;
